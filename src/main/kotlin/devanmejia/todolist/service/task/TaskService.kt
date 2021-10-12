@@ -11,6 +11,6 @@ interface TaskService {
     fun getAllUsersTasks(login: String): List<Task>
     fun createNewTask(taskDTO: TaskDTO, user: User): Task
     fun removeTask(taskId: Long, login: String)
-    fun closeTask(taskId: Long, login: String)
-    fun changeContent(taskId: Long, content: Content, login: String)
+    fun closeTask(taskId: Long, login: String): Task
+    fun changeContent(taskId: Long, content: Content, login: String): Task
 }

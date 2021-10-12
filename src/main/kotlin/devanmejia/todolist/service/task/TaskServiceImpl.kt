@@ -24,17 +24,17 @@ class TaskServiceImpl(
     override fun removeTask(taskId: Long, login: String) =
         taskRepository.deleteByIdAndUserLogin(taskId, login)
 
-    override fun closeTask(taskId: Long, login: String) {
+    override fun closeTask(taskId: Long, login: String): Task {
         val task = taskRepository.findByIdAndUserLogin(taskId, login)
             ?: throw NotPermittedException("Can not close task $taskId")
         task.isReady = true
-        taskRepository.save(task)
+        return taskRepository.save(task)
     }
 
-    override fun changeContent(taskId: Long, content: Content, login: String) {
+    override fun changeContent(taskId: Long, content: Content, login: String): Task {
         val task = taskRepository.findByIdAndUserLogin(taskId, login)
             ?: throw NotPermittedException("Can not change task $taskId content")
         task.content = content
-        taskRepository.save(task)
+        return taskRepository.save(task)
     }
 }
