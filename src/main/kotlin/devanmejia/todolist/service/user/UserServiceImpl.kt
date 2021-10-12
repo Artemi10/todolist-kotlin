@@ -10,10 +10,14 @@ class UserServiceImpl(
     private val userRepository: UserRepository) : UserService {
 
     override fun createNewUser(userDTO: UserDTO): User {
-        TODO("Not yet implemented")
+        val user = User(userDTO.id, userDTO.login, userDTO.birthDate, emptyList())
+        return userRepository.save(user)
     }
 
     override fun renameUser(oldLogin: String, newLogin: String): User {
-        TODO("Not yet implemented")
+        val user = userRepository.findByLogin(oldLogin)
+            ?: throw IllegalArgumentException("No such user $oldLogin")
+        user.login = newLogin
+        return userRepository.save(user)
     }
 }
