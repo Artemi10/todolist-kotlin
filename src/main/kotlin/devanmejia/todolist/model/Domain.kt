@@ -11,8 +11,8 @@ data class Task(
     var id: Long? = null,
     @Embedded
     @AttributeOverrides(
-        AttributeOverride(name = "startTime", column = Column(name = "conclusion_date")),
-        AttributeOverride(name = "endTime", column = Column(name = "close_date"))
+        AttributeOverride(name = "title", column = Column(name = "title")),
+        AttributeOverride(name = "text", column = Column(name = "text"))
     )
     var content: Content,
     var isReady: Boolean = false,
