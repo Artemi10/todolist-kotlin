@@ -1,7 +1,7 @@
 package devanmejia.todolist.repository
 
-import devanmejia.todolist.model.Task
+import devanmejia.todolist.model.User
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface TaskRepository : JpaRepository<Task, Long?> {
+interface UserRepository : JpaRepository<User, Long> {
 }
