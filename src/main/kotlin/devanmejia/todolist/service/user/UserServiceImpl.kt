@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service
 class UserServiceImpl(
     private val userRepository: UserRepository) : UserService {
 
+    override fun getUserByLogin(login: String) =
+        userRepository.findByLogin(login)
+            ?: throw IllegalArgumentException("No such user $login")
+
     override fun createNewUser(userDTO: UserDTO): User {
         val user = User(userDTO.id, userDTO.login, userDTO.birthDate, emptyList())
         return userRepository.save(user)

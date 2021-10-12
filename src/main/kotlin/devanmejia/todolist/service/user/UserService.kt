@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 interface UserService {
+    fun getUserByLogin(login: String): User
     fun createNewUser(userDTO: UserDTO): User
     fun renameUser(oldLogin: String, newLogin: String): User
 }
