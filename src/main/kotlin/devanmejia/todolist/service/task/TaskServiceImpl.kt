@@ -34,7 +34,10 @@ class TaskServiceImpl(
     override fun changeContent(taskId: Long, content: Content, login: String): Task {
         val task = taskRepository.findByIdAndUserLogin(taskId, login)
             ?: throw NotPermittedException("Can not change task $taskId content")
-        task.content = content
-        return taskRepository.save(task)
+        if (!task.isReady){
+            task.content = content
+            return taskRepository.save(task)
+        }
+        else throw IllegalArgumentException("Task $taskId has already been closed")
     }
 }
