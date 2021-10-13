@@ -13,7 +13,7 @@ data class TaskDTO(
     val login: String
 ){
     companion object{
-        fun from(tasks: List<Task>) = tasks.map { from(it) }.toString()
+        fun from(tasks: List<Task>) = tasks.map { from(it) }.toList()
         fun from(task: Task) = TaskDTO(task.id, task.content,
             task.isReady, task.date, task.user.login)
     }
@@ -25,7 +25,7 @@ data class UserDTO(
     val birthDate: Date
 ){
     companion object{
-        fun from(users: List<User>) = users.map { from(it) }.toString()
+        fun from(users: List<User>) = users.map { from(it) }.toList()
         fun from(user: User) = UserDTO(user.id, user.login, user.birthDate)
     }
 }
