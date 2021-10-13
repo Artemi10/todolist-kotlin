@@ -1,5 +1,6 @@
 package devanmejia.todolist.interceptors
 
+import devanmejia.todolist.exception.AuthorizationException
 import devanmejia.todolist.exception.NotPermittedException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,5 +20,13 @@ class NotPermittedControllerAdvice {
     @ExceptionHandler(NotPermittedException::class)
     fun handleException(e: NotPermittedException): ResponseEntity<String> {
         return ResponseEntity(e.message, HttpStatus.FORBIDDEN)
+    }
+}
+
+@ControllerAdvice
+class AuthorizationControllerAdvice {
+    @ExceptionHandler(AuthorizationException::class)
+    fun handleException(e: AuthorizationException): ResponseEntity<String> {
+        return ResponseEntity(e.message, HttpStatus.UNAUTHORIZED)
     }
 }
