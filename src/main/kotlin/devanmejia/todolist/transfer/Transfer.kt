@@ -9,13 +9,11 @@ data class TaskDTO(
     val id: Long? = null,
     val content: Content,
     val isReady: Boolean = false,
-    val date: Date = Date(),
-    val login: String
+    val date: Date = Date()
 ){
     companion object{
         fun from(tasks: List<Task>) = tasks.map { from(it) }.toList()
-        fun from(task: Task) = TaskDTO(task.id, task.content,
-            task.isReady, task.date, task.user.login)
+        fun from(task: Task) = TaskDTO(task.id, task.content, task.isReady, task.date)
     }
 }
 
