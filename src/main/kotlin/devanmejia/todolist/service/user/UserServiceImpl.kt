@@ -14,7 +14,7 @@ class UserServiceImpl(
             ?: throw IllegalArgumentException("No such user $login")
 
     override fun createNewUser(userDTO: UserDTO): User {
-        val user = User(userDTO.login, userDTO.birthDate, emptyList())
+        val user = User(userDTO.login, userDTO.birthDate, mutableListOf())
         return userRepository.save(user)
     }
 

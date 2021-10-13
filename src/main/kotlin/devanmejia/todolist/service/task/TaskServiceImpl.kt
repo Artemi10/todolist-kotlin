@@ -26,8 +26,11 @@ class TaskServiceImpl(
     override fun closeTask(taskId: Long, login: String): Task {
         val task = taskRepository.findByIdAndUserLogin(taskId, login)
             ?: throw NotPermittedException("Can not close task $taskId")
-        task.isReady = true
-        return taskRepository.save(task)
+        if (!task.isReady){
+            task.isReady = true
+            return taskRepository.save(task)
+        }
+        else throw IllegalArgumentException("Task $taskId has already been closed")
     }
 
     override fun changeContent(taskId: Long, content: Content, login: String): Task {

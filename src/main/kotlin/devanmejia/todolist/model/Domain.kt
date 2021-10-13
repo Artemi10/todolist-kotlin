@@ -38,5 +38,5 @@ data class User(
     var login: String,
     var birthDate: Date,
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    var tasks: List<Task>
+    var tasks: MutableList<Task>
 ) : BaseEntity()
