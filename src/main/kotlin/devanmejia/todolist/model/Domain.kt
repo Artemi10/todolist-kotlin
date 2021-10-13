@@ -3,12 +3,15 @@ package devanmejia.todolist.model
 import java.util.*
 import javax.persistence.*
 
+
+
+
 @Entity
 @Table(name = "tasks")
 data class Task(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+    val id: Long,
     @Embedded
     @AttributeOverrides(
         AttributeOverride(name = "title", column = Column(name = "title")),
@@ -33,7 +36,7 @@ data class Content(
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+    val id: Long,
     var login: String,
     var birthDate: Date,
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
