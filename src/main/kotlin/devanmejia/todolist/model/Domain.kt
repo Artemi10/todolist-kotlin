@@ -3,15 +3,16 @@ package devanmejia.todolist.model
 import java.util.*
 import javax.persistence.*
 
-
-
+@MappedSuperclass
+open class BaseEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null
+}
 
 @Entity
 @Table(name = "tasks")
 data class Task(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
     @Embedded
     @AttributeOverrides(
         AttributeOverride(name = "title", column = Column(name = "title")),
@@ -23,7 +24,7 @@ data class Task(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var user: User
-)
+) : BaseEntity()
 
 @Embeddable
 data class Content(
@@ -34,11 +35,8 @@ data class Content(
 @Entity
 @Table(name = "users")
 data class User(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
     var login: String,
     var birthDate: Date,
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     var tasks: List<Task>
-)
+) : BaseEntity()

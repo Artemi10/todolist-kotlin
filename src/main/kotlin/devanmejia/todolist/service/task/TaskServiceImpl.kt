@@ -16,8 +16,7 @@ class TaskServiceImpl(
         taskRepository.findAllByUserLogin(login)
 
     override fun createNewTask(taskDTO: TaskDTO, user: User): Task {
-        val newTask = Task(taskDTO.id, taskDTO.content,
-            taskDTO.isReady, taskDTO.date, user)
+        val newTask = Task(taskDTO.content, taskDTO.isReady, taskDTO.date, user)
         return taskRepository.save(newTask)
     }
 

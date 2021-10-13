@@ -6,7 +6,7 @@ import devanmejia.todolist.model.User
 import java.util.*
 
 data class TaskDTO(
-    val id: Long,
+    val id: Long?,
     val content: Content,
     val isReady: Boolean = false,
     val date: Date = Date()
@@ -18,7 +18,7 @@ data class TaskDTO(
 }
 
 data class UserDTO(
-    val id: Long,
+    val id: Long?,
     val login: String,
     val birthDate: Date
 ){
