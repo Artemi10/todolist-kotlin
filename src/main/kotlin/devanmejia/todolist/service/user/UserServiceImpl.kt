@@ -14,6 +14,9 @@ class UserServiceImpl(
             ?: throw IllegalArgumentException("No such user $login")
 
     override fun createNewUser(userDTO: UserDTO): User {
+        userRepository.findByLogin(userDTO.login)?.let {
+            throw IllegalArgumentException("User ${userDTO.login} has already been created")
+        }
         val user = User(userDTO.login, userDTO.birthDate, mutableListOf())
         return userRepository.save(user)
     }
