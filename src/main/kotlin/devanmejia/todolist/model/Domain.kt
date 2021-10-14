@@ -1,5 +1,6 @@
 package devanmejia.todolist.model
 
+import org.hibernate.Hibernate
 import java.util.*
 import javax.persistence.*
 
@@ -24,7 +25,29 @@ data class Task(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var user: User
-) : BaseEntity()
+) : BaseEntity(){
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Task
+        return content == other.content && isReady == other.isReady
+                && date == other.date && user == other.user
+    }
+
+    override fun hashCode(): Int {
+        var result = content.hashCode()
+        result = 31 * result + isReady.hashCode()
+        result = 31 * result + date.hashCode()
+        result = 31 * result + user.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return this::class.simpleName + "(content = $content , " +
+                "isReady = $isReady , date = $date ,user = $user )"
+    }
+}
 
 @Embeddable
 data class Content(
@@ -39,4 +62,22 @@ data class User(
     var birthDate: Date,
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     var tasks: MutableList<Task>
-) : BaseEntity()
+) : BaseEntity(){
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as User
+        return login == other.login && birthDate == other.birthDate
+    }
+
+    override fun hashCode(): Int {
+        var result = login.hashCode()
+        result = 31 * result + birthDate.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return this::class.simpleName + "(login = $login , birthDate = $birthDate )"
+    }
+}
