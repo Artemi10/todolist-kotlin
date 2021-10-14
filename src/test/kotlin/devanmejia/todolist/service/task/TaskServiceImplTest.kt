@@ -63,7 +63,6 @@ class TaskServiceImplTest {
         assertThrows(IllegalArgumentException::class.java) { taskService.closeTask(2, "devanmejia") }
         Mockito.verify(taskRepository, Mockito.times(1))
             .findByIdAndUserLogin(2, "devanmejia")
-        Mockito.verify(taskRepository, Mockito.times(0))
     }
 
     @Test
@@ -71,7 +70,6 @@ class TaskServiceImplTest {
         assertThrows(NotPermittedException::class.java) { taskService.closeTask(3, "devanmejia") }
         Mockito.verify(taskRepository, Mockito.times(1))
             .findByIdAndUserLogin(3, "devanmejia")
-        Mockito.verify(taskRepository, Mockito.times(0))
     }
 
     @Test
@@ -94,7 +92,6 @@ class TaskServiceImplTest {
         }
         Mockito.verify(taskRepository, Mockito.times(1))
             .findByIdAndUserLogin(2, "devanmejia")
-        Mockito.verify(taskRepository, Mockito.times(0))
     }
 
     @Test
@@ -105,6 +102,5 @@ class TaskServiceImplTest {
         }
         Mockito.verify(taskRepository, Mockito.times(1))
             .findByIdAndUserLogin(3, "devanmejia")
-        Mockito.verify(taskRepository, Mockito.times(0))
     }
 }
