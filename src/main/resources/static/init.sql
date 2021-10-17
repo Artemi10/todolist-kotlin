@@ -1,3 +1,5 @@
+set time zone 'Europe/Moscow';
+
 create table users
 (
     id         bigserial
@@ -22,7 +24,7 @@ create table tasks
         constraint tasks_pk
             primary key,
     title    varchar(45) not null,
-    content  varchar(255),
+    text  varchar(255),
     is_ready boolean     not null,
     date     date        not null,
     user_id  bigint      not null
@@ -36,3 +38,18 @@ alter table tasks
 create unique index tasks_id_uindex
     on tasks (id);
 
+insert into users (id, login, birth_date)
+values (1, 'devanmejia', '2003-02-03');
+
+insert into tasks (id, title, text, is_ready, "date", user_id)
+values (2, 'Homework', 'Do homework until Friday', true, '2021-10-12', 1);
+insert into tasks (id, title, text, is_ready, "date", user_id)
+values (3, 'Extended homework', 'Do homework until Sunday', false, '2021-10-12', 1);
+insert into tasks (id, title, text, is_ready, "date", user_id)
+values (4, 'Homework Again', 'Do homework again until Saturday', false, '2021-10-13', 1);
+insert into tasks (id, title, text, is_ready, "date", user_id)
+values (5, 'Homework Again', 'Do homework again until Saturday', false, '2021-10-13', 1);
+insert into tasks (id, title, text, is_ready, "date", user_id)
+values (6, 'Homework Again', 'Do homework again until Saturday', false, '2021-10-13', 1);
+insert into tasks (id, title, text, is_ready, "date", user_id)
+values (7, 'Homework Again', 'Do homework again until Saturday', false, '2021-10-13', 1);
