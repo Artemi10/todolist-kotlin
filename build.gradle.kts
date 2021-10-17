@@ -8,6 +8,7 @@ plugins {
     kotlin("plugin.spring") version "1.5.10"
 }
 
+
 group = "devanmejia"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
@@ -23,8 +24,13 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("junit:junit:4.13.1")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.mockk:mockk:1.8.8")
+    testImplementation("org.testcontainers:testcontainers:1.15.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.15.3")
+    testImplementation("org.testcontainers:postgresql:1.15.3")
+
     runtimeOnly("org.postgresql:postgresql")
 }
 
