@@ -32,7 +32,7 @@ data class Task(
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as Task
         return content == other.content && isReady == other.isReady
-                && date == other.date && user == other.user
+                && date.time == other.date.time && user == other.user
     }
 
     override fun hashCode(): Int {
@@ -68,7 +68,7 @@ data class User(
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as User
-        return login == other.login && birthDate == other.birthDate
+        return login == other.login && birthDate.time == other.birthDate.time
     }
 
     override fun hashCode(): Int {
