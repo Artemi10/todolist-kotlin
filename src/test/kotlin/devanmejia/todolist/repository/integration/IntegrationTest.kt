@@ -27,8 +27,6 @@ fun createPostgresContainer() = postgres("postgres") {
     withExposedPorts(5431)
 }
 
-val DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd")
-
 private fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit) =
     PostgreSQLContainer<Nothing>(DockerImageName.parse(imageName)).apply(opts)
 
@@ -37,6 +35,7 @@ private fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() 
 class UserRepositoryIntegrationTest{
     @Autowired
     private lateinit var userRepository: UserRepository
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
     companion object{
         @Container
@@ -53,7 +52,7 @@ class UserRepositoryIntegrationTest{
         val user = userRepository.findByLogin("devanmejia")
         assertNotEquals(null, user)
         assertEquals("devanmejia", user!!.login)
-        assertEquals(DATE_FORMAT.parse("2003-02-03"), user.birthDate)
+        assertEquals(dateFormat.parse("2003-02-03"), user.birthDate)
         assertEquals(5, user.tasks.size)
     }
 
