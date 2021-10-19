@@ -78,9 +78,8 @@ class UserRepositoryIntegrationTest{
 
     @AfterEach
     @Transactional
-    fun `clear test database`(){
-        userRepository.deleteByLogin("login3")
-    }
+    fun `clear test database`() = userRepository.deleteByLogin("login3")
+
 }
 
 @Testcontainers
