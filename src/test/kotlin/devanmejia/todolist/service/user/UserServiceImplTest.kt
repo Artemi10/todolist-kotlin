@@ -57,23 +57,4 @@ internal class UserServiceImplTest {
         Mockito.verify(userRepository, Mockito.times(1))
             .findByLogin("devanmejia")
     }
-
-    @Test
-    fun `rename user if exists`() {
-        val renamedUser = userService.renameUser("devanmejia", "devanmejia2")
-        assertEquals("devanmejia2", renamedUser.login)
-        Mockito.verify(userRepository, Mockito.times(1))
-            .findByLogin("devanmejia")
-        Mockito.verify(userRepository, Mockito.times(1))
-            .save(renamedUser)
-    }
-
-    @Test
-    fun `throws exception if not exists during renaming`() {
-       assertThrows(IllegalArgumentException::class.java) {
-           userService.renameUser("devanmejia1", "devanmejia2")
-       }
-        Mockito.verify(userRepository, Mockito.times(1))
-            .findByLogin("devanmejia1")
-    }
 }

@@ -20,11 +20,4 @@ class UserServiceImpl(
         val user = User(userDTO.login, userDTO.birthDate, mutableListOf())
         return userRepository.save(user)
     }
-
-    override fun renameUser(oldLogin: String, newLogin: String): User {
-        val user = userRepository.findByLogin(oldLogin)
-            ?: throw IllegalArgumentException("No such user $oldLogin")
-        user.login = newLogin
-        return userRepository.save(user)
-    }
 }

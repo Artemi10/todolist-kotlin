@@ -1,14 +1,17 @@
 package devanmejia.todolist.model
 
 import org.hibernate.Hibernate
+import org.hibernate.annotations.NaturalId
 import java.util.*
 import javax.persistence.*
 
 @MappedSuperclass
-open class BaseEntity{
+open class GeneratedIdEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
+    @NaturalId
+    val uuid: UUID = UUID.randomUUID()
 }
 
 @Entity
@@ -25,23 +28,16 @@ data class Task(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var user: User
-) : BaseEntity(){
+) : GeneratedIdEntity(){
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as Task
-        return content == other.content && isReady == other.isReady
-                && date.time == other.date.time && user == other.user
+        return uuid == other.uuid
     }
 
-    override fun hashCode(): Int {
-        var result = content.hashCode()
-        result = 31 * result + isReady.hashCode()
-        result = 31 * result + date.hashCode()
-        result = 31 * result + user.hashCode()
-        return result
-    }
+    override fun hashCode() = uuid.hashCode()
 
     override fun toString(): String {
         return this::class.simpleName + "(content = $content , " +
@@ -55,10 +51,18 @@ data class Content(
     var text: String = ""
 )
 
+@MappedSuperclass
+open class BaseEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null
+}
+
 @Entity
 @Table(name = "users")
 data class User(
-    var login: String,
+    @NaturalId
+    val login: String,
     var birthDate: Date,
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     var tasks: MutableList<Task>
@@ -68,14 +72,10 @@ data class User(
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as User
-        return login == other.login && birthDate.time == other.birthDate.time
+        return login == other.login
     }
 
-    override fun hashCode(): Int {
-        var result = login.hashCode()
-        result = 31 * result + birthDate.hashCode()
-        return result
-    }
+    override fun hashCode() = login.hashCode()
 
     override fun toString(): String {
         return this::class.simpleName + "(login = $login , birthDate = $birthDate )"

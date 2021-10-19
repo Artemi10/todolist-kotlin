@@ -1,10 +1,10 @@
 package devanmejia.todolist.repository.integration
 
-import devanmejia.todolist.model.Content
-import devanmejia.todolist.model.Task
 import devanmejia.todolist.model.User
 import devanmejia.todolist.repository.TaskRepository
 import devanmejia.todolist.repository.UserRepository
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,26 +20,16 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-fun createBasicEntity(): User{
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-    val tasks = mutableListOf<Task>()
-    val user = User("devanmejia", dateFormat.parse("2003-02-03"), tasks)
-    tasks.add(Task(Content("Homework", "Do homework until Friday"), true, dateFormat.parse("2021-10-12"), user))
-    tasks.add(Task(Content("Extended homework", "Do homework until Sunday"), false, dateFormat.parse("2021-10-12"), user))
-    tasks.add(Task(Content("Homework Again", "Do homework again until Saturday"), false, dateFormat.parse("2021-10-13"), user))
-    tasks.add(Task(Content("Homework Again", "Do homework again until Saturday"), false, dateFormat.parse("2021-10-13"), user))
-    tasks.add(Task(Content("Homework Again", "Do homework again until Saturday"), false, dateFormat.parse("2021-10-13"), user))
-    tasks.add(Task(Content("Homework Again", "Do homework again until Saturday"), false, dateFormat.parse("2021-10-13"), user))
-    return user
-}
 
 fun createPostgresContainer() = postgres("postgres") {
     withDatabaseName("postgres")
     withUsername("postgres")
     withPassword("2424285")
     withInitScript("./static/init.sql")
-    withExposedPorts(5421)
+    withExposedPorts(5431)
 }
+
+val DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd")
 
 private fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit) =
     PostgreSQLContainer<Nothing>(DockerImageName.parse(imageName)).apply(opts)
@@ -49,15 +39,11 @@ private fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() 
 class UserRepositoryIntegrationTest{
     @Autowired
     private lateinit var userRepository: UserRepository
-    private lateinit var user: User
 
     companion object{
         @Container
         val container = createPostgresContainer()
     }
-
-    @BeforeEach
-    fun initUser() = run { user = createBasicEntity() }
 
     @Test
     fun `container is up and running`() =
@@ -68,27 +54,34 @@ class UserRepositoryIntegrationTest{
     fun `find user by existing login`(){
         val user = userRepository.findByLogin("devanmejia")
         assertNotEquals(null, user)
-        assertEquals(this.user, user)
-        assertTrue(this.user.tasks.size == user!!.tasks.size
-                && this.user.tasks.containsAll(user.tasks)
-                && user.tasks.containsAll(this.user.tasks))
+        assertEquals("devanmejia", user!!.login)
+        assertEquals(DATE_FORMAT.parse("2003-02-03"), user.birthDate)
+        assertEquals(5, user.tasks.size)
     }
 
     @Test
+    @Transactional
     fun `return null if user is not found`(){
         val user = userRepository.findByLogin("non-devanmejia")
         assertNull(user)
     }
 
     @Test
+    @Transactional
     fun `hash code test`(){
         val userSet = mutableSetOf<User>()
-        val user = User("login", Date(), mutableListOf())
+        val user = User("login3", Date(), mutableListOf())
         val anotherUser = User("login1", Date(), mutableListOf())
         userSet.add(user)
         val savedUser = userRepository.save(user)
         assertTrue(userSet.contains(savedUser))
         assertFalse(userSet.contains(anotherUser))
+    }
+
+    @AfterEach
+    @Transactional
+    fun `clear test database`(){
+        userRepository.deleteByLogin("login3")
     }
 }
 
@@ -97,6 +90,8 @@ class UserRepositoryIntegrationTest{
 class TaskRepositoryIntegrationTest{
     @Autowired
     private lateinit var taskRepository: TaskRepository
+    @Autowired
+    private lateinit var userRepository: UserRepository
     private lateinit var user: User
 
     companion object{
@@ -105,9 +100,13 @@ class TaskRepositoryIntegrationTest{
     }
 
     @BeforeEach
-    fun initUser() = run { user = createBasicEntity() }
+    fun initUser() = run {
+        user = userRepository.findByLogin("devanmejia")
+            ?: throw IllegalArgumentException("Cannot find test user")
+    }
 
     @Test
+    @Transactional
     fun `find all user tasks by user login`(){
         val tasks = taskRepository.findAllByUserLogin(user.login)
         assertTrue(user.tasks.size == tasks.size
@@ -122,9 +121,11 @@ class TaskRepositoryIntegrationTest{
     }
 
     @Test
+    @Transactional
     fun `find task by id and user login`(){
-        val task = taskRepository.findByIdAndUserLogin(2, user.login)
-        assertEquals(user.tasks[0], task)
+        val task = taskRepository.findByIdAndUserLogin(3, user.login)
+        assertTrue(user.tasks.contains(task))
+        assertEquals(3, task!!.id)
     }
 
     @Test
