@@ -19,8 +19,6 @@ import org.testcontainers.utility.DockerImageName
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-
 fun createPostgresContainer() = postgres("postgres") {
     withDatabaseName("postgres")
     withUsername("postgres")
